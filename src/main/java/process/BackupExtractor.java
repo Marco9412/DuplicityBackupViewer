@@ -40,7 +40,7 @@ public class BackupExtractor {
         new Thread(() -> {
             LoadingWindow.showLoadingWindow("Extracting...");
             try {
-                Process p = new ProcessBuilder("/usr/bin/duplicity", "--no-encryption", "-r " + path, uri, lpath).start();
+                Process p = new ProcessBuilder("/usr/bin/duplicity", "--no-encryption", "--file-to-restore=" + path, uri, lpath).start();
 
                 try {
                     p.waitFor();

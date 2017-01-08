@@ -10,4 +10,4 @@ For more infos about duplicity see http://duplicity.nongnu.org/.
 - save recent backups uris
 - implement keyboard interaction with duplicity (for password insertions)
 - use system icons
-
+- option to delete local cache
