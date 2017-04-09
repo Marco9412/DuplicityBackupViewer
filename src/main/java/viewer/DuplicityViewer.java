@@ -33,6 +33,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
 
 public class DuplicityViewer {
     private JTree tree1;
@@ -136,17 +137,27 @@ public class DuplicityViewer {
         JMenuItem mExtract = new JMenuItem("Extract");
         mExtract.addActionListener(e -> {
             if (JOptionPane.showConfirmDialog(null, "Do you want to extract this item?", "Are you sure?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                String localp = JOptionPane.showInputDialog(null, "Insert local path where place data:");
-                if (localp == null || localp.equals("")) {
+                JFileChooser jfc = new JFileChooser();
+
+                TreePath p = tree1.getSelectionPath();
+                // set correct filename
+                jfc.setSelectedFile(new File(
+                        ((TreeUserObject)((DefaultMutableTreeNode)p.getPath()[p.getPathCount()-1]).getUserObject()).getTitle()));
+
+                if (jfc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
+                    return;
+                }
+                String localp = jfc.getSelectedFile().getAbsolutePath();
+                //String localp = JOptionPane.showInputDialog(null, "Insert local path where place data:");
+                if (localp.equals("")) {
                     JOptionPane.showMessageDialog(null, "Wrong path!");
                     return;
                 }
 
-                String completePath = "";
-                TreePath p = tree1.getSelectionPath();
+                StringBuilder completePath = new StringBuilder();
                 for (int i = 1; i < p.getPath().length; ++i) {
                     TreeUserObject current = (TreeUserObject) ((DefaultMutableTreeNode) p.getPath()[i]).getUserObject();
-                    completePath += current.getTitle() + "/";
+                    completePath.append(current.getTitle()).append("/");
                 }
                 // Skip last /
                 new BackupExtractor(model.getBackupPath(), completePath.substring(0, completePath.length() - 1), localp).extract();

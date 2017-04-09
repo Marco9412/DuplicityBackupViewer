@@ -39,14 +39,16 @@ public class DuplicityModel implements Model {
     private String execDuplicity() {
         try {
             // Search for line "dow mon dom hh:mm:ss yyyy ."
-            Pattern pattern = Pattern.compile("[a-zA-Z]{3,3} [a-zA-Z]{3,3} ( [0-9]|[0-9]{2,2}) [0-9]{2,2}:[0-9]{2,2}:[0-9]{2,2} [0-9]{4,4} \\.");
+            @SuppressWarnings("RepeatedSpace")
+            Pattern pattern = Pattern.compile("[a-zA-Z]{3} [a-zA-Z]{3} ( [0-9]|[0-9]{2}) [0-9]{2}:[0-9]{2}:[0-9]{2} [0-9]{4} \\.");
             StringBuilder res = new StringBuilder(500);
             String tmp;
-            final String CMD = "/usr/bin/duplicity list-current-files " + path + "";
-            Process p = Runtime.getRuntime().exec(CMD);
+            //final String CMD = "/usr/bin/duplicity list-current-files " + path + "";
+            Process p = Runtime.getRuntime().exec(new String[]{"/usr/bin/duplicity", "list-current-files", path});
 
             BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            while ((tmp = br.readLine()) != null && !pattern.matcher(tmp).matches()) ; // skip first lines
+            //noinspection StatementWithEmptyBody
+            while ((tmp = br.readLine()) != null && !pattern.matcher(tmp).matches()) {} // skip first lines
 
             while ((tmp = br.readLine()) != null) {
                 res.append(tmp);
